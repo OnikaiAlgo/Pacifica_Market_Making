@@ -1,7 +1,25 @@
-# Environment variables
-.env
+# =============================================================================
+# SENSITIVE DATA - NEVER COMMIT
+# =============================================================================
 
-# Python
+# Environment variables & secrets
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*_secret*
+*_private*
+
+# Wallet & keys
+wallet*.json
+keypair*.json
+id.json
+
+# =============================================================================
+# PYTHON
+# =============================================================================
+
 __pycache__/
 *.py[cod]
 *$py.class
@@ -19,44 +37,99 @@ parts/
 sdist/
 var/
 wheels/
+share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+MANIFEST
 
 # Virtual environments
 venv/
 ENV/
 env/
+.venv/
 
-# Logs
-*.log
-market_maker.log
+# =============================================================================
+# TRADING DATA - DO NOT COMMIT
+# =============================================================================
 
-# Data files
+# Market data
 *.csv
+PACIFICA_data/
 PACIFICA_data/*.csv
 PACIFICA_data/**/*.csv
+
+# Trading parameters (contains live positions/balances)
 params/*.json
 params/**/*.json
 
-# IDE
+# Logs (may contain sensitive info)
+*.log
+*.log.*
+market_maker.log
+logs/
+
+# Backup files
+*.bak
+*.backup
+*~
+
+# =============================================================================
+# IDE & EDITOR
+# =============================================================================
+
 .vscode/
 .idea/
 *.swp
 *.swo
 *~
+.project
+.pydevproject
+.settings/
 
+# =============================================================================
 # OS
+# =============================================================================
+
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 
-# Jupyter Notebook
-.ipynb_checkpoints
+# =============================================================================
+# JUPYTER NOTEBOOK
+# =============================================================================
 
-# Testing
+.ipynb_checkpoints
+*.ipynb_checkpoints/
+*.ipynb
+
+# =============================================================================
+# TESTING
+# =============================================================================
+
 .pytest_cache/
 .coverage
+.coverage.*
 htmlcov/
+.tox/
+.nox/
 
-# Docker
+# =============================================================================
+# DOCKER
+# =============================================================================
+
 .dockerignore
+docker-compose.override.yml
+
+# =============================================================================
+# TEMPORARY FILES
+# =============================================================================
+
+*.tmp
+*.temp
+/tmp/
+temp/
