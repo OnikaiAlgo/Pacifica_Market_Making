@@ -1,0 +1,2041 @@
+openapi: 3.0.3
+info:
+  title: Exchange API
+  description: API for the Exchange
+  license:
+    name: ''
+  version: 0.1.0
+paths:
+  /api/v1/account:
+    get:
+      tags:
+      - Account
+      summary: Get Account Info
+      description: This endpoint allows users to get account info.
+      operationId: get_account_info
+      parameters:
+      - name: account
+        in: query
+        description: User account address
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved account information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccountInfoResponse'
+              example:
+                balance: '2000.000000'
+                feeLevel: 0
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/account/leverage:
+    post:
+      tags:
+      - Account
+      summary: Update the leverage of the account for a given symbol
+      description: This endpoint allows users to change the leverage for a specific trading pair.
+      operationId: update_leverage
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateLeverageRequest'
+        required: true
+      responses:
+        '200':
+          description: Leverage updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateLeverageResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/account/margin:
+    post:
+      tags:
+      - Account
+      summary: Update the margin mode of the account for a given symbol
+      description: This endpoint allows users to switch between isolated and cross margin modes for a specific trading pair.
+      operationId: update_margin_mode
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateMarginModeRequest'
+        required: true
+      responses:
+        '200':
+          description: Margin mode updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateMarginModeResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/account/settings:
+    get:
+      tags:
+      - Account
+      summary: Get Account Settings
+      description: This endpoint allows users to get account settings.
+      operationId: get_account_settings
+      parameters:
+      - name: account
+        in: query
+        description: User account address
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved account settings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AccountSettingsResponse'
+              example:
+              - createdAt: 2025-03-25T16:00:37.600487Z
+                isolated: true
+                leverage: 30
+                symbol: ETH
+                updatedAt: 2025-03-25T16:00:38.280350Z
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/account/withdraw:
+    post:
+      tags:
+      - Account
+      summary: Withdraw
+      description: This endpoint allows users to withdraw.
+      operationId: withdraw
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WithdrawRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /api/v1/agent/bind:
+    post:
+      tags:
+      - Agent
+      summary: Bind Agent Wallet
+      description: This endpoint allows users to bind agent wallet.
+      operationId: bind_agent_wallet
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BindAgentWalletRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /api/v1/funding/history:
+    get:
+      tags:
+      - Funding
+      summary: Get Funding History
+      description: This endpoint allows users to get funding history.
+      operationId: get_funding_history
+      parameters:
+      - name: account
+        in: query
+        description: User account address
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of records to return (optional, defaults to system defined limit)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: offset
+        in: query
+        description: Number of records to skip (optional, defaults to 0)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved funding history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FundingHistoryResponse'
+              example:
+              - amount: '0.0067'
+                createdAt: 2025-03-25T16:00:06.600783Z
+                historyId: 12551
+                payout: '-0.007351166970000000000000000'
+                rate: '0.0000125000000000000000000000'
+                side: bid
+                symbol: BTC
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/info:
+    get:
+      tags:
+      - Info
+      summary: Get Exchange Info
+      description: This endpoint allows users to get exchange information.
+      operationId: get_info
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ExchangeInfo'
+              examples:
+                SingleBook:
+                  summary: Single Book Item
+                  value:
+                  - fundingRate: '0.0000125000000000000000000000'
+                    isolatedOnly: false
+                    maxLeverage: 50
+                    maxOrderSize: '1000000'
+                    maxTick: '1000000'
+                    minOrderSize: '10'
+                    minTick: '1000'
+                    nextFundingRate: '0.0000125000000000000000000000'
+                    symbol: BTC
+                    tickSize: '0.1'
+        '500':
+          description: Internal server error
+  /api/v1/info/prices:
+    get:
+      tags:
+      - Info
+      summary: Get Current Prices
+      description: This endpoint allows users to get current prices for all symbols.
+      operationId: get_prices
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {}
+              examples:
+                PricesExample:
+                  summary: Price Information
+                  value:
+                  - funding: '0.0000125000000000000000000000'
+                    mid: '84050'
+                    nextFunding: '0.0000125000000000000000000000'
+                    openInterest: '1000000'
+                    oracle: '84000'
+                    symbol: BTC
+                    volume24h: '5000000'
+                    yesterdayPrice: '83500'
+        '404':
+          description: No prices data available
+        '500':
+          description: Internal server error
+  /api/v1/kline:
+    get:
+      tags:
+      - Kline
+      summary: Get Kline
+      description: This endpoint allows users to get kline.
+      operationId: get_kline
+      parameters:
+      - name: symbol
+        in: query
+        description: Trading pair symbol (e.g. BTC, ETH)
+        required: true
+        schema:
+          type: string
+      - name: interval
+        in: query
+        description: 'Candlestick interval. Valid values: 1m, 5m, 15m, 30m, 1h, 4h, 1d'
+        required: true
+        schema:
+          $ref: '#/components/schemas/CandleInterval'
+      - name: startTime
+        in: query
+        description: Start time in milliseconds. Required.
+        required: true
+        schema:
+          type: integer
+          format: int64
+      - name: endTime
+        in: query
+        description: End time in milliseconds. Optional, defaults to current time if not provided.
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved kline data
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/KlineResponse'
+              example:
+              - T: 1742243220000
+                c: '84072'
+                h: '84108'
+                i: 1m
+                l: '84072'
+                n: 58
+                o: '84108'
+                s: BTC
+                t: 1742243160000
+                v: '0.1944'
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/orders:
+    get:
+      tags:
+      - Orders
+      summary: Get Open Orders
+      description: This endpoint allows users to get open orders.
+      operationId: get_open_orders
+      parameters:
+      - name: account
+        in: query
+        description: User account address to filter orders
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved open orders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpenOrderResponse'
+              example:
+              - createdAt: 2025-03-25T15:13:44.820568Z
+                initialAmount: '0.0053'
+                orderId: 13753364
+                orderType: limit
+                reduceOnly: false
+                remainingAmount: '0.0053'
+                side: bid
+                stopParentOrderId: null
+                stopTickLevel: null
+                symbol: BTC
+                tickLevel: 86500
+                updatedAt: 2025-03-25T15:13:44.820568Z
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/orders/batch:
+    post:
+      tags:
+      - Orders
+      summary: Process Batch Orders
+      description: This endpoint allows users to process batch orders.
+      operationId: process_batch_orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchOrdersRequest'
+        required: true
+      responses:
+        '200':
+          description: Success
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /api/v1/orders/cancel:
+    post:
+      tags:
+      - Orders
+      summary: Cancel an existing order
+      operationId: cancel_order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Order cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelOrderResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/orders/cancel_all:
+    post:
+      tags:
+      - Orders
+      summary: Cancel all orders for a given symbol
+      operationId: cancel_all_orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelAllOrdersRequest'
+        required: true
+      responses:
+        '200':
+          description: All orders cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelAllOrdersResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/orders/create:
+    post:
+      tags:
+      - Orders
+      summary: Create a new order
+      description: This endpoint allows users to create a new order with optional take profit and stop loss levels.
+      operationId: create_order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateOrderResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/orders/history:
+    get:
+      tags:
+      - Orders
+      summary: Get Order History
+      description: This endpoint allows users to get order history.
+      operationId: get_order_history
+      parameters:
+      - name: account
+        in: query
+        description: User account address to filter orders
+        required: true
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: Maximum number of records to return (optional, defaults to system defined limit)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: offset
+        in: query
+        description: Number of records to skip (optional, defaults to 0)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved order history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderHistoryResponse'
+              example:
+              - amount: '0.0053'
+                createdAt: 2025-03-25T15:13:44.820568Z
+                eventType: make
+                historyId: 26698518
+                orderId: 13753364
+                orderType: limit
+                price: '87500'
+                reduceOnly: false
+                side: bid
+                stopParentOrderId: null
+                stopTickLevel: null
+                symbol: BTC
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/orders/history_by_id:
+    get:
+      tags:
+      - Orders
+      summary: Get Order History By Id
+      description: This endpoint allows users to get order history by id.
+      operationId: get_order_history_by_id
+      parameters:
+      - name: order_id
+        in: query
+        description: Order ID to retrieve history for
+        required: true
+        schema:
+          type: integer
+          format: int64
+          minimum: 0
+      responses:
+        '200':
+          description: Successfully retrieved order history for the specified order ID
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrderHistoryResponse'
+              example:
+              - - amount: '0.1'
+                  createdAt: 2025-03-26T18:05:41.152521Z
+                  eventType: fulfill_limit
+                  historyId: 2
+                  orderId: 13753364
+                  orderType: limit
+                  price: '50000.00'
+                  reduceOnly: false
+                  side: bid
+                  stopParentOrderId: null
+                  stopTickLevel: null
+                  symbol: BTC
+                - amount: '0.1'
+                  createdAt: 2025-03-26T18:04:41.152521Z
+                  eventType: make
+                  historyId: 1
+                  orderId: 13753364
+                  orderType: limit
+                  price: '50000.00'
+                  reduceOnly: false
+                  side: bid
+                  stopParentOrderId: null
+                  stopTickLevel: null
+                  symbol: BTC
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/orders/stop/cancel:
+    post:
+      tags:
+      - Orders
+      summary: Cancel an existing stop order
+      description: This endpoint allows users to cancel a stop order by its ID.
+      operationId: cancel_stop_order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CancelStopOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Stop order cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CancelStopOrderResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/orders/stop/create:
+    post:
+      tags:
+      - Orders
+      summary: Create Stop Order
+      description: This endpoint allows users to create stop order.
+      operationId: create_stop_order
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateStopOrderRequest'
+        required: true
+      responses:
+        '200':
+          description: Stop order created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateStopOrderResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+  /api/v1/portfolio:
+    get:
+      tags:
+      - Portfolio
+      summary: Get Portfolio History
+      description: This endpoint allows users to get portfolio history.
+      operationId: get_portfolio_history
+      parameters:
+      - name: account
+        in: query
+        description: User account address (required)
+        required: true
+        schema:
+          type: string
+      - name: start_time
+        in: query
+        description: Start time in milliseconds (optional)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: end_time
+        in: query
+        description: End time in milliseconds (optional)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: granularity_in_minutes
+        in: query
+        description: Time granularity in minutes (optional)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: limit
+        in: query
+        description: Maximum number of records to return (optional, defaults to system defined limit)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: offset
+        in: query
+        description: Number of records to skip (optional, defaults to 0)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved portfolio history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PortfolioHistoryResponse'
+              example:
+              - account_equity: '997.88760080'
+                timestamp: 2025-03-26T16:42:00Z
+              - account_equity: '997.98277520'
+                timestamp: 2025-03-26T16:41:00Z
+        '400':
+          description: Invalid request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal server error
+  /api/v1/positions:
+    get:
+      tags:
+      - Positions
+      summary: Get Current Positions
+      description: This endpoint allows users to get current positions.
+      operationId: get_current_positions
+      parameters:
+      - name: account
+        in: query
+        description: User account address
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successfully retrieved current positions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PositionsResponse'
+              example:
+              - amount: '0.0067'
+                createdAt: 2025-03-18T20:01:26.983080Z
+                entryPrice: '82124.29850746268656716417911'
+                isolated: false
+                margin: '-0.2483864'
+                side: bid
+                symbol: BTC
+                updatedAt: 2025-03-21T20:00:21.295592Z
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/positions/history:
+    get:
+      tags:
+      - Positions
+      summary: Get Position History
+      description: This endpoint allows users to get position history.
+      operationId: get_position_history
+      parameters:
+      - name: account
+        in: query
+        description: User account address (optional)
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: symbol
+        in: query
+        description: Market symbol to filter by (optional)
+        required: false
+        schema:
+          type: string
+          nullable: true
+      - name: start_time
+        in: query
+        description: Start time in milliseconds (optional)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: end_time
+        in: query
+        description: End time in milliseconds (optional)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: limit
+        in: query
+        description: Maximum number of records to return (optional, defaults to system defined limit)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      - name: offset
+        in: query
+        description: Number of records to skip (optional, defaults to 0)
+        required: false
+        schema:
+          type: integer
+          format: int64
+          nullable: true
+      responses:
+        '200':
+          description: Successfully retrieved position history
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PositionHistoryResponse'
+              example:
+              - amount: '0.0011'
+                createdAt: 2025-03-21T09:12:12.652363Z
+                entryPrice: '82124.29850746268656716417911'
+                eventType: open_long
+                fee: '0.017820'
+                historyId: 710023
+                isMaker: true
+                pnl: '-0.017820'
+                price: '81000'
+                symbol: BTC
+        '400':
+          description: Invalid request parameters
+        '401':
+          description: Unauthorized access
+        '500':
+          description: Internal server error
+  /api/v1/positions/tpsl:
+    post:
+      tags:
+      - Positions
+      summary: Set take profit and stop loss for a position
+      description: This endpoint allows users to set take profit and stop loss levels for an existing position.
+      operationId: set_position_tpsl
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SetPositionTPSLRequest'
+        required: true
+      responses:
+        '200':
+          description: Take profit and stop loss set successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SetPositionTPSLResponse'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+components:
+  schemas:
+    AccountInfoQueryParams:
+      type: object
+      required:
+      - account
+      properties:
+        account:
+          type: string
+          description: User account address
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    AccountInfoResponse:
+      type: object
+      required:
+      - balance
+      - feeLevel
+      properties:
+        balance:
+          type: string
+          description: Account balance
+          example: '2000.000000'
+        feeLevel:
+          type: integer
+          format: int32
+          description: Fee level for the account
+          example: 0
+    AccountSettingsQueryParams:
+      type: object
+      required:
+      - account
+      properties:
+        account:
+          type: string
+          description: User account address
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    AccountSettingsResponse:
+      type: object
+      required:
+      - symbol
+      - isolated
+      - leverage
+      - createdAt
+      - updatedAt
+      properties:
+        createdAt:
+          type: string
+          description: Timestamp when the settings were created
+          example: 2025-03-25T16:00:37.600487Z
+        isolated:
+          type: boolean
+          description: Whether isolated margin is enabled
+          example: true
+        leverage:
+          type: integer
+          format: int32
+          description: Leverage multiplier
+          example: 30
+        symbol:
+          type: string
+          description: Market symbol (e.g., BTC, ETH)
+          example: ETH
+        updatedAt:
+          type: string
+          description: Timestamp when the settings were last updated
+          example: 2025-03-25T16:00:38.280350Z
+    BatchAction:
+      oneOf:
+      - type: object
+        required:
+        - type
+        - data
+        properties:
+          data:
+            $ref: '#/components/schemas/CreateOrderRequest'
+          type:
+            type: string
+            enum:
+            - Create
+      - type: object
+        required:
+        - type
+        - data
+        properties:
+          data:
+            $ref: '#/components/schemas/CancelOrderRequest'
+          type:
+            type: string
+            enum:
+            - Cancel
+      discriminator:
+        propertyName: type
+    BatchOrderResponse:
+      type: object
+      required:
+      - results
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderResult'
+    BatchOrdersRequest:
+      type: object
+      required:
+      - actions
+      properties:
+        actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/BatchAction'
+    BindAgentWalletRequest:
+      type: object
+      required:
+      - user
+      - agent_wallet
+      - signature
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    BindAgentWalletResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+          example: true
+    CancelAllOrdersRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - all_symbols
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        all_symbols:
+          type: boolean
+          example: true
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        symbol:
+          type: string
+          example: BTC
+          nullable: true
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    CancelAllOrdersResponse:
+      type: object
+      required:
+      - cancelled_count
+      properties:
+        cancelled_count:
+          type: integer
+          format: int32
+          example: 5
+          minimum: 0
+    CancelOrderRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - symbol
+      - order_id
+      - tick_level
+      - side
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        order_id:
+          type: integer
+          format: int64
+          example: 12345
+          minimum: 0
+        side:
+          type: string
+          example: bid
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        symbol:
+          type: string
+          example: BTC
+        tick_level:
+          type: integer
+          format: int32
+          example: 100
+          minimum: 0
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    CancelOrderResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+          example: true
+    CancelStopOrderRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - symbol
+      - order_id
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        order_id:
+          type: integer
+          format: int64
+          example: 12345
+          minimum: 0
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        symbol:
+          type: string
+          example: BTC
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    CancelStopOrderResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+          example: true
+    CandleInterval:
+      type: string
+      enum:
+      - 1m
+      - 3m
+      - 5m
+      - 15m
+      - 30m
+      - 1h
+      - 2h
+      - 4h
+      - 8h
+      - 12h
+      - 1d
+    CreateOrderRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - symbol
+      - tick_level
+      - amount
+      - side
+      - tif
+      - reduce_only
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        amount:
+          type: string
+          example: '0.5'
+        reduce_only:
+          type: boolean
+          example: false
+        side:
+          type: string
+          example: bid
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        stop_loss:
+          allOf:
+          - $ref: '#/components/schemas/StopOrderInfo'
+          nullable: true
+        symbol:
+          type: string
+          example: BTC
+        take_profit:
+          allOf:
+          - $ref: '#/components/schemas/StopOrderInfo'
+          nullable: true
+        tick_level:
+          type: integer
+          format: int32
+          example: 100
+          minimum: 0
+        tif:
+          type: string
+          example: GTC
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    CreateOrderResponse:
+      type: object
+      required:
+      - order_id
+      properties:
+        order_id:
+          type: integer
+          format: int64
+          example: 12345
+          minimum: 0
+    CreateStopOrderRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - symbol
+      - stop_order
+      - side
+      - reduce_only
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        reduce_only:
+          type: boolean
+          example: true
+        side:
+          type: string
+          example: long
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        stop_order:
+          $ref: '#/components/schemas/StopOrderInfo'
+        symbol:
+          type: string
+          example: BTC
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    CreateStopOrderResponse:
+      type: object
+      required:
+      - order_id
+      properties:
+        order_id:
+          type: integer
+          format: int64
+          example: 12345
+          minimum: 0
+    ErrorResponse:
+      type: object
+      required:
+      - error
+      - code
+      properties:
+        code:
+          type: integer
+          format: int32
+          example: 400
+        data:
+          nullable: true
+        error:
+          type: string
+          example: An error occurred
+    ExchangeInfo:
+      type: object
+      required:
+      - symbol
+      - tickSize
+      - minTick
+      - maxTick
+      - maxLeverage
+      - isolatedOnly
+      - minOrderSize
+      - maxOrderSize
+      - fundingRate
+      - nextFundingRate
+      properties:
+        fundingRate:
+          type: string
+          example: '0.0000125000000000000000000000'
+        isolatedOnly:
+          type: boolean
+          example: false
+        maxLeverage:
+          type: integer
+          format: int32
+          example: 50
+          minimum: 0
+        maxOrderSize:
+          type: string
+          example: '1000000'
+        maxTick:
+          type: string
+          example: '1000000'
+        minOrderSize:
+          type: string
+          example: '10'
+        minTick:
+          type: string
+          example: '1000'
+        nextFundingRate:
+          type: string
+          example: '0.0000125000000000000000000000'
+        symbol:
+          type: string
+        tickSize:
+          type: string
+          example: '0.1'
+    FundingHistoryQueryParams:
+      type: object
+      required:
+      - account
+      properties:
+        account:
+          type: string
+          description: User account address
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+        limit:
+          type: integer
+          format: int64
+          description: Maximum number of records to return (optional, defaults to system defined limit)
+          example: 100
+          nullable: true
+        offset:
+          type: integer
+          format: int64
+          description: Number of records to skip (optional, defaults to 0)
+          example: 0
+          nullable: true
+    FundingHistoryResponse:
+      type: object
+      required:
+      - historyId
+      - symbol
+      - side
+      - amount
+      - payout
+      - rate
+      - createdAt
+      properties:
+        amount:
+          type: string
+          description: Position size
+          example: '0.0067'
+        createdAt:
+          type: string
+          description: Timestamp when funding was applied
+          example: 2025-03-25T16:00:06.600783Z
+        historyId:
+          type: integer
+          format: int64
+          description: Unique funding history entry ID
+          example: 12551
+        payout:
+          type: string
+          description: Funding payment amount (negative means payment, positive means receipt)
+          example: '-0.007351166970000000000000000'
+        rate:
+          type: string
+          description: Funding rate applied
+          example: '0.0000125000000000000000000000'
+        side:
+          type: string
+          description: Position side (bid/ask)
+          example: bid
+        symbol:
+          type: string
+          description: Market symbol
+          example: BTC
+    KlineQueryParams:
+      type: object
+      required:
+      - symbol
+      - interval
+      - startTime
+      - endTime
+      properties:
+        endTime:
+          type: integer
+          format: int64
+          description: End time in milliseconds. Optional, defaults to current time if not provided.
+          example: '1625184000000'
+          nullable: true
+        interval:
+          type: string
+          description: 'Candlestick interval. Valid values: 1m, 5m, 15m, 30m, 1h, 4h, 1d'
+          example: 1m
+        startTime:
+          type: integer
+          format: int64
+          description: Start time in milliseconds. Required.
+          example: '1625097600000'
+        symbol:
+          type: string
+          description: Trading pair symbol (e.g. BTC, ETH)
+          example: BTC
+    KlineResponse:
+      type: object
+      required:
+      - t
+      - T
+      - s
+      - i
+      - o
+      - c
+      - h
+      - l
+      - v
+      - n
+      properties:
+        T:
+          type: integer
+          format: int64
+          description: End time in milliseconds
+          example: '1742243220000'
+        c:
+          type: string
+          description: Closing price
+          example: '84072'
+        h:
+          type: string
+          description: Highest price during interval
+          example: '84108'
+        i:
+          type: string
+          description: Candle interval
+          example: 1m
+        l:
+          type: string
+          description: Lowest price during interval
+          example: '84072'
+        n:
+          type: integer
+          format: int32
+          description: Number of trades in interval
+          example: 58
+          minimum: 0
+        o:
+          type: string
+          description: Opening price
+          example: '84108'
+        s:
+          type: string
+          description: Market symbol
+          example: BTC
+        t:
+          type: integer
+          format: int64
+          description: Start time in milliseconds
+          example: '1742243160000'
+        v:
+          type: string
+          description: Trading volume
+          example: '0.1944'
+    OpenOrderResponse:
+      type: object
+      required:
+      - orderId
+      - symbol
+      - side
+      - tickLevel
+      - initialAmount
+      - remainingAmount
+      - orderType
+      - reduceOnly
+      - createdAt
+      - updatedAt
+      properties:
+        createdAt:
+          type: string
+          description: Order creation timestamp
+          example: 2025-03-25T15:13:44.820568Z
+        initialAmount:
+          type: string
+          description: Initial order amount
+          example: '0.0053'
+        orderId:
+          type: integer
+          format: int64
+          description: Order ID in the system
+          example: 13753364
+        orderType:
+          type: string
+          description: Type of order (limit, market, stop, etc.)
+          example: limit
+        reduceOnly:
+          type: boolean
+          description: Whether this order reduces position only
+          example: false
+        remainingAmount:
+          type: string
+          description: Remaining unfilled amount
+          example: '0.0053'
+        side:
+          type: string
+          description: 'Order side: bid (buy) or ask (sell)'
+          example: bid
+        stopParentOrderId:
+          type: integer
+          format: int64
+          description: Parent order ID for stop orders
+          example: 'null'
+          nullable: true
+        stopTickLevel:
+          type: integer
+          format: int64
+          description: Stop price level (for stop orders)
+          example: 'null'
+          nullable: true
+        symbol:
+          type: string
+          description: Market symbol for the order
+          example: BTC
+        tickLevel:
+          type: integer
+          format: int64
+          description: Price level at which the order is placed
+          example: 86500
+        updatedAt:
+          type: string
+          description: Order last update timestamp
+          example: 2025-03-25T15:13:44.820568Z
+    OpenOrdersQueryParams:
+      type: object
+      required:
+      - account
+      properties:
+        account:
+          type: string
+          description: User account address to filter orders
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    OrderHistoryByIdQueryParams:
+      type: object
+      required:
+      - order_id
+      properties:
+        order_id:
+          type: integer
+          format: int64
+          description: Order ID to retrieve history for
+          example: 12345
+          minimum: 0
+    OrderHistoryQueryParams:
+      type: object
+      required:
+      - account
+      properties:
+        account:
+          type: string
+          description: User account address to filter orders
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+        limit:
+          type: integer
+          format: int64
+          description: Maximum number of records to return (optional, defaults to system defined limit)
+          example: 100
+          nullable: true
+        offset:
+          type: integer
+          format: int64
+          description: Number of records to skip (optional, defaults to 0)
+          example: 0
+          nullable: true
+    OrderHistoryResponse:
+      type: object
+      required:
+      - historyId
+      - orderId
+      - symbol
+      - side
+      - price
+      - amount
+      - eventType
+      - orderType
+      - reduceOnly
+      - createdAt
+      properties:
+        amount:
+          type: string
+          description: Amount involved in this event
+          example: '0.0053'
+        createdAt:
+          type: string
+          description: Timestamp when this event occurred
+          example: 2025-03-25T15:13:44.820568Z
+        eventType:
+          type: string
+          description: Type of event (make, take, cancel, expire, etc.)
+          example: make
+        historyId:
+          type: integer
+          format: int64
+          description: Unique history entry ID
+          example: 26698518
+        orderId:
+          type: integer
+          format: int64
+          description: Order ID in the system
+          example: 13753364
+        orderType:
+          type: string
+          description: Type of order (limit, market, stop, etc.)
+          example: limit
+        price:
+          type: string
+          description: Price at which the order executed
+          example: '87500'
+        reduceOnly:
+          type: boolean
+          description: Whether this order was reduce-only
+          example: false
+        side:
+          type: string
+          description: 'Order side: bid (buy) or ask (sell)'
+          example: bid
+        stopParentOrderId:
+          type: integer
+          format: int64
+          description: Parent order ID for stop orders
+          example: 'null'
+          nullable: true
+        stopTickLevel:
+          type: integer
+          format: int64
+          description: Stop price level (for stop orders)
+          example: 'null'
+          nullable: true
+        symbol:
+          type: string
+          description: Market symbol for the order
+          example: BTC
+    OrderResult:
+      type: object
+      required:
+      - success
+      properties:
+        error:
+          type: string
+          example: Order not found
+          nullable: true
+        order_id:
+          type: integer
+          format: int64
+          example: 12345
+          nullable: true
+          minimum: 0
+        success:
+          type: boolean
+          example: true
+    PortfolioHistoryQueryParams:
+      type: object
+      required:
+      - account
+      properties:
+        account:
+          type: string
+          description: User account address (required)
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+        end_time:
+          type: integer
+          format: int64
+          description: End time in milliseconds (optional)
+          example: '1625184000000'
+          nullable: true
+        granularity_in_minutes:
+          type: integer
+          format: int64
+          description: Time granularity in minutes (optional)
+          example: 1
+          nullable: true
+        limit:
+          type: integer
+          format: int64
+          description: Maximum number of records to return (optional, defaults to system defined limit)
+          example: 100
+          nullable: true
+        offset:
+          type: integer
+          format: int64
+          description: Number of records to skip (optional, defaults to 0)
+          example: 0
+          nullable: true
+        start_time:
+          type: integer
+          format: int64
+          description: Start time in milliseconds (optional)
+          example: '1625097600000'
+          nullable: true
+    PortfolioHistoryResponse:
+      type: object
+      required:
+      - account_equity
+      - timestamp
+      properties:
+        account_equity:
+          type: string
+          description: Account equity value at this timestamp
+          example: '997.88760080'
+        timestamp:
+          type: string
+          description: Timestamp for this data point
+          example: 2025-03-26T16:42:00Z
+    PositionHistoryQueryParams:
+      type: object
+      properties:
+        account:
+          type: string
+          description: User account address (optional)
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+          nullable: true
+        end_time:
+          type: integer
+          format: int64
+          description: End time in milliseconds (optional)
+          example: '1625184000000'
+          nullable: true
+        limit:
+          type: integer
+          format: int64
+          description: Maximum number of records to return (optional, defaults to system defined limit)
+          example: 100
+          nullable: true
+        offset:
+          type: integer
+          format: int64
+          description: Number of records to skip (optional, defaults to 0)
+          example: 0
+          nullable: true
+        start_time:
+          type: integer
+          format: int64
+          description: Start time in milliseconds (optional)
+          example: '1625097600000'
+          nullable: true
+        symbol:
+          type: string
+          description: Market symbol to filter by (optional)
+          example: BTC
+          nullable: true
+    PositionHistoryResponse:
+      type: object
+      required:
+      - historyId
+      - symbol
+      - amount
+      - price
+      - entryPrice
+      - fee
+      - pnl
+      - isMaker
+      - eventType
+      - createdAt
+      properties:
+        amount:
+          type: string
+          description: Position size
+          example: '0.0011'
+        createdAt:
+          type: string
+          description: Timestamp when the trade occurred
+          example: 2025-03-21T09:12:12.652363Z
+        entryPrice:
+          type: string
+          description: Average entry price of the position
+          example: '82124.29850746268656716417911'
+        eventType:
+          type: string
+          description: Type of position event (open_long, close_long, open_short, close_short, etc.)
+          example: open_long
+        fee:
+          type: string
+          description: Fee paid for this trade
+          example: '0.017820'
+        historyId:
+          type: integer
+          format: int64
+          description: Unique position history entry ID
+          example: 710023
+        isMaker:
+          type: boolean
+          description: Whether this trade was executed as a maker
+          example: true
+        pnl:
+          type: string
+          description: Profit and loss from this trade
+          example: '-0.017820'
+        price:
+          type: string
+          description: Execution price
+          example: '81000'
+        symbol:
+          type: string
+          description: Market symbol
+          example: BTC
+    PositionsQueryParams:
+      type: object
+      required:
+      - account
+      properties:
+        account:
+          type: string
+          description: User account address
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    PositionsResponse:
+      type: object
+      required:
+      - symbol
+      - side
+      - amount
+      - entryPrice
+      - margin
+      - isolated
+      - createdAt
+      - updatedAt
+      properties:
+        amount:
+          type: string
+          description: Position size
+          example: '0.0067'
+        createdAt:
+          type: string
+          description: Timestamp when position was created
+          example: 2025-03-18T20:01:26.983080Z
+        entryPrice:
+          type: string
+          description: Average entry price of the position
+          example: '82124.29850746268656716417911'
+        isolated:
+          type: boolean
+          description: Whether isolated margin is enabled for this position
+          example: false
+        margin:
+          type: string
+          description: Margin allocated to position (negative for unrealized loss)
+          example: '-0.2483864'
+        side:
+          type: string
+          description: Position side (bid/ask)
+          example: bid
+        symbol:
+          type: string
+          description: Market symbol
+          example: BTC
+        updatedAt:
+          type: string
+          description: Timestamp when position was last updated
+          example: 2025-03-21T20:00:21.295592Z
+    SetPositionTPSLRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - symbol
+      - side
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        side:
+          type: string
+          example: bid
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        stop_loss:
+          allOf:
+          - $ref: '#/components/schemas/StopOrderInfo'
+          nullable: true
+        symbol:
+          type: string
+          example: BTC
+        take_profit:
+          allOf:
+          - $ref: '#/components/schemas/StopOrderInfo'
+          nullable: true
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    SetPositionTPSLResponse:
+      type: object
+      required:
+      - success
+      properties:
+        success:
+          type: boolean
+          example: true
+    StopOrderInfo:
+      type: object
+      required:
+      - stop_tick_level
+      properties:
+        amount:
+          type: string
+          example: '0.3'
+          nullable: true
+        limit_tick_level:
+          type: integer
+          format: int32
+          example: 125
+          nullable: true
+          minimum: 0
+        stop_tick_level:
+          type: integer
+          format: int32
+          example: 120
+          minimum: 0
+    UpdateLeverageRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - symbol
+      - leverage
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        leverage:
+          type: integer
+          format: int32
+          example: 10
+          minimum: 0
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        symbol:
+          type: string
+          example: BTC
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    UpdateLeverageResponse:
+      type: object
+      required:
+      - success
+      properties:
+        error:
+          type: string
+          example: Invalid leverage
+          nullable: true
+        success:
+          type: boolean
+          example: true
+    UpdateMarginModeRequest:
+      type: object
+      required:
+      - user
+      - signature
+      - symbol
+      - is_isolated
+      properties:
+        agent_wallet:
+          type: string
+          example: AgentWalletAddress123
+          nullable: true
+        is_isolated:
+          type: boolean
+          example: false
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        symbol:
+          type: string
+          example: BTC
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    UpdateMarginModeResponse:
+      type: object
+      required:
+      - success
+      properties:
+        error:
+          type: string
+          example: Invalid margin mode
+          nullable: true
+        success:
+          type: boolean
+          example: true
+    WithdrawRequest:
+      type: object
+      required:
+      - user
+      - amount
+      - signature
+      properties:
+        amount:
+          type: integer
+          format: int64
+          example: '100.0'
+          minimum: 0
+        signature:
+          type: string
+          example: 5j1Vy9UqYUF2jKD9r2Lv5AoMWHJuW5a1mqVzEhC9SJL5GgbPkGEQKpW3UZmKXr4UMrHMJ5xHQFMJk2wE8J5Vyc
+        user:
+          type: string
+          example: Cdoykiss4V6kWydv7Q1EQghNqens9Hpte2iB7qjxNxc6
+    WithdrawResponse:
+      type: object
+      required:
+      - success
+      properties:
+        error:
+          type: string
+          example: Invalid withdraw amount
+          nullable: true
+        success:
+          type: boolean
+          example: true
