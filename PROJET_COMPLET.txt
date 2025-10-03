@@ -318,7 +318,9 @@ RESSOURCES
   - .env.example      : Configuration détaillée
 
 🌐 LIENS UTILES:
-  - Pacifica:  https://app.pacifica.fi/ (Code referral: 18SRTGXDJWCVSY75)
+  - Pacifica:  https://app.pacifica.fi/
+  - Codes referral: 18SRTGXDJWCVSY75, D0CJ7BAYKFPDES42, 754C0W62E9ZS8M00,
+                    H0A3G2BES01RCKVX, 8Q6E0AC9KWY941A4, DRHGPPSWAXJ9Q2T6
   - Docs:      https://docs.pacifica.fi/
   - SDK:       https://github.com/pacifica-fi/python-sdk
   - Solana:    https://docs.solana.com/
@@ -379,7 +381,9 @@ Pacifica Finance avec spreads dynamiques et analyse de tendance.
 
 ⚠️ N'OUBLIEZ PAS:
   1. Créer un compte sur https://app.pacifica.fi/
-  2. Utiliser le code referral: 18SRTGXDJWCVSY75 (frais réduits)
+  2. Utiliser un code referral (frais réduits):
+     - 18SRTGXDJWCVSY75, D0CJ7BAYKFPDES42, 754C0W62E9ZS8M00
+     - H0A3G2BES01RCKVX, 8Q6E0AC9KWY941A4, DRHGPPSWAXJ9Q2T6
   3. Commencer avec de petits montants pour tester
 
 Bonne chance avec votre market making! 🚀
