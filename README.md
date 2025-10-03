@@ -17,11 +17,17 @@ A Python market making bot for the Pacifica Finance DEX platform on the Solana b
 Before using this bot, you need a Pacifica Finance account:
 
 1. **Visit [https://app.pacifica.fi/](https://app.pacifica.fi/)**
-2. **Use referral code: `18SRTGXDJWCVSY75`** for trading fee discounts
+2. **Use one of these referral codes** for trading fee discounts:
+   - `18SRTGXDJWCVSY75`
+   - `D0CJ7BAYKFPDES42`
+   - `754C0W62E9ZS8M00`
+   - `H0A3G2BES01RCKVX`
+   - `8Q6E0AC9KWY941A4`
+   - `DRHGPPSWAXJ9Q2T6`
 3. Connect your Solana wallet (Phantom, Solflare, etc.)
 4. Deposit USDC to start trading
 
-> **💡 Important**: Using the referral code `18SRTGXDJWCVSY75` gives you reduced trading fees, which is crucial for market making profitability.
+> **💡 Important**: Using a referral code gives you reduced trading fees, which is crucial for market making profitability.
 
 ### Step 2: Prepare Your Wallet
 
