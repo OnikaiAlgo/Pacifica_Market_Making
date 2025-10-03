@@ -1,0 +1,97 @@
+networks:
+  default:
+    driver: bridge
+
+services:
+  data-collector:
+    build: .
+    container_name: pacifica_data_collector
+    environment:
+      - RESTART_MINUTES=2
+    env_file:
+      - .env
+    volumes:
+      - ./PACIFICA_data:/app/PACIFICA_data
+      - ./params:/app/params
+      - ./data_collector.py:/app/data_collector.py:ro
+      - ./api_client.py:/app/api_client.py:ro
+      - ./.env:/app/.env:ro
+    command: >
+      sh -c "while true; do \
+        python data_collector.py $${SYMBOL} --flush-interval 5; \
+        sleep $${RESTART_MINUTES}m; \
+      done"
+    restart: unless-stopped
+
+  avellaneda-params:
+    build: .
+    container_name: pacifica_avellaneda_params
+    environment:
+      - PARAM_REFRESH_MINUTES=10
+    env_file:
+      - .env
+    volumes:
+      - ./PACIFICA_data:/app/PACIFICA_data
+      - ./params:/app/params
+      - ./calculate_avellaneda_parameters.py:/app/calculate_avellaneda_parameters.py:ro
+      - ./api_client.py:/app/api_client.py:ro
+    command: >
+      sh -c "while true; do
+        python calculate_avellaneda_parameters.py $${SYMBOL} --minutes $${PARAM_REFRESH_MINUTES};
+        sleep $${PARAM_REFRESH_MINUTES}m;
+      done"
+    restart: unless-stopped
+    depends_on:
+      - data-collector
+
+  trend-finder:
+    build: .
+    container_name: pacifica_trend_finder
+    environment:
+      - TREND_REFRESH_MINUTES=5
+      - TREND_INTERVAL=5m
+    env_file:
+      - .env
+    volumes:
+      - ./PACIFICA_data:/app/PACIFICA_data
+      - ./params:/app/params
+      - ./generate_klines.py:/app/generate_klines.py:ro
+      - ./find_trend.py:/app/find_trend.py:ro
+      - ./api_client.py:/app/api_client.py:ro
+      - ./.env:/app/.env:ro
+    command: >
+      sh -c "while true; do
+        echo 'Generating/updating klines from trades...';
+        python generate_klines.py --symbol $${SYMBOL} --interval $${TREND_INTERVAL} --historical-only;
+        echo 'Running trend analysis...';
+        python find_trend.py --symbol $${SYMBOL} --interval $${TREND_INTERVAL};
+        sleep $${TREND_REFRESH_MINUTES}m;
+      done"
+    restart: unless-stopped
+    depends_on:
+      - data-collector
+
+  market-maker:
+    build: .
+    container_name: pacifica_market_maker
+    environment:
+      - RESTART_MINUTES=2
+      - PYTHONUNBUFFERED=1
+    env_file:
+      - .env
+    volumes:
+      - ./PACIFICA_data:/app/PACIFICA_data
+      - ./params:/app/params
+      - ./.env:/app/.env:ro
+    command: >
+      sh -c "while true; do
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Starting market maker for $${SYMBOL}...\";
+        python -u market_maker.py --symbol $${SYMBOL} 2>&1;
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Market maker exited. Sleeping for $${RESTART_MINUTES} minutes...\";
+        sleep $${RESTART_MINUTES}m;
+      done"
+    depends_on:
+      - data-collector
+      - avellaneda-params
+      - trend-finder
+    restart: unless-stopped
