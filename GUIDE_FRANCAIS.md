@@ -10,7 +10,7 @@ Avant d'utiliser ce bot, vous devez créer un compte Pacifica Finance:
 
 1. **Visitez [https://app.pacifica.fi/](https://app.pacifica.fi/)**
 2. **Utilisez l'un de ces codes referral** pour bénéficier de réductions sur les frais:
-   - `18SRTGXDJWCVSY75`
+   - `18SRTGXDJWCVSY75` ✅ (déjà utilisé)
    - `D0CJ7BAYKFPDES42`
    - `754C0W62E9ZS8M00`
    - `H0A3G2BES01RCKVX`
@@ -477,8 +477,9 @@ Vous disposez maintenant d'un bot de market making **COMPLET et FONCTIONNEL** po
 ## 🚨 RAPPELS IMPORTANTS
 
 1. 🔗 **Codes referral disponibles** sur https://app.pacifica.fi/:
-   - `18SRTGXDJWCVSY75`, `D0CJ7BAYKFPDES42`, `754C0W62E9ZS8M00`
-   - `H0A3G2BES01RCKVX`, `8Q6E0AC9KWY941A4`, `DRHGPPSWAXJ9Q2T6`
+   - ✅ `18SRTGXDJWCVSY75` (déjà utilisé)
+   - `D0CJ7BAYKFPDES42`, `754C0W62E9ZS8M00`, `H0A3G2BES01RCKVX`
+   - `8Q6E0AC9KWY941A4`, `DRHGPPSWAXJ9Q2T6`
 2. 🔑 **1 seule clé** Solana (format base58)
 3. 📝 **Format symbole**: BTC, ETH, SOL (sans USDT)
 4. 💰 **Commencez PETIT**: 5% du solde max

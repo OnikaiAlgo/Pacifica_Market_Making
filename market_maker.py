@@ -19,10 +19,10 @@ DEFAULT_SELL_SPREAD = 0.006  # 0.6% above mid-price for sell orders (aligned wit
 USE_AVELLANEDA_SPREADS = True  # Toggle to pull spreads from Avellaneda parameter files (ENABLED with gamma cap at 3.0)
 DEFAULT_LEVERAGE = 1
 DEFAULT_BALANCE_FRACTION = 0.20  # Use fraction of available balance for each order (aligned with ASTER)
-POSITION_THRESHOLD_USD = 15.0  # USD threshold to switch to sell mode in case of partial order fill
+POSITION_THRESHOLD_USD = 40.0  # USD threshold to switch to sell mode in case of partial order fill
 
 # TIMING (in seconds)
-ORDER_REFRESH_INTERVAL = 30     # How long to wait before cancelling an unfilled order, in seconds.
+ORDER_REFRESH_INTERVAL = 20     # How long to wait before cancelling an unfilled order, in seconds.
 RETRY_ON_ERROR_INTERVAL = 30    # How long to wait after a major error before retrying.
 PRICE_REPORT_INTERVAL = 60      # How often to report current prices and spread to terminal.
 BALANCE_REPORT_INTERVAL = 60    # How often to report account balance to terminal.

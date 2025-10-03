@@ -18,7 +18,7 @@ Before using this bot, you need a Pacifica Finance account:
 
 1. **Visit [https://app.pacifica.fi/](https://app.pacifica.fi/)**
 2. **Use one of these referral codes** for trading fee discounts:
-   - `18SRTGXDJWCVSY75`
+   - `18SRTGXDJWCVSY75` ✅ (already used)
    - `D0CJ7BAYKFPDES42`
    - `754C0W62E9ZS8M00`
    - `H0A3G2BES01RCKVX`
