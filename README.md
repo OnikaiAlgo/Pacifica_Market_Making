@@ -10,18 +10,30 @@ A Python market making bot for the Pacifica Finance DEX platform on the Solana b
 - **Real-time Data**: WebSocket-based market data and balance monitoring
 - **Solana-Based**: Fully integrated with the Solana blockchain ecosystem
 
-## Key Differences from ASTER Market Making
+## Getting Started with Pacifica Finance
 
-This bot is specifically designed for **Pacifica Finance** and has several important differences from the ASTER version:
+### Step 1: Create Your Account
 
-| Feature | Pacifica | ASTER |
-|---------|----------|-------|
-| **Blockchain** | Solana | Ethereum-compatible |
-| **Authentication** | Solana keypair (base58 private key) | Ethereum API keys + signatures |
-| **Trading Symbols** | Simple format (BTC, ETH, SOL) | Pairs format (BTCUSDT, ETHUSDT) |
-| **Collateral** | USDC on Solana | Various stablecoins |
-| **Private Key Format** | Base58 encoded Solana key | Ethereum hex format (0x...) |
-| **Dependencies** | solders, base58 | web3, eth_abi, eth_account |
+Before using this bot, you need a Pacifica Finance account:
+
+1. **Visit [https://app.pacifica.fi/](https://app.pacifica.fi/)**
+2. **Use referral code: `18SRTGXDJWCVSY75`** for trading fee discounts
+3. Connect your Solana wallet (Phantom, Solflare, etc.)
+4. Deposit USDC to start trading
+
+> **💡 Important**: Using the referral code `18SRTGXDJWCVSY75` gives you reduced trading fees, which is crucial for market making profitability.
+
+### Step 2: Prepare Your Wallet
+
+This bot requires a Solana wallet with:
+- **USDC** for trading collateral
+- **SOL** for transaction fees (~0.01 SOL minimum)
+
+**Recommended**: Use a dedicated wallet for the bot, separate from your main holdings.
+
+## Included Components
+
+This project includes the official Pacifica Finance Python SDK (`pacifica_sdk/`) from [https://github.com/pacifica-fi/python-sdk](https://github.com/pacifica-fi/python-sdk) for seamless integration with the Pacifica DEX.
 
 ## Quick Start
 
@@ -157,8 +169,8 @@ Create a `.env` file in the root directory (use `.env.example` as a template):
 PRIVATE_KEY=your_base58_private_key_here
 
 # Trading symbol (simple format without USDT suffix)
-# Valid examples: BTC, ETH, SOL, ASTER
-# Do NOT use: BTCUSDT, ETHUSDT (that's ASTER/Binance format)
+# Valid examples: BTC, ETH, SOL
+# Do NOT use: BTCUSDT, ETHUSDT (use simple format instead)
 SYMBOL=BTC
 
 # =============================================================================

@@ -1,15 +1,26 @@
 # Guide Complet - Bot Market Making Pacifica Finance
 
-## 🎉 ADAPTATION COMPLÈTE RÉUSSIE
+## 🎉 BOT DE MARKET MAKING PROFESSIONNEL
 
-Votre bot de market making a été **entièrement adapté** d'AsterDex vers Pacifica Finance avec **TOUTES les fonctionnalités** du projet original.
+Bot de market making complet pour Pacifica Finance DEX avec spreads dynamiques et analyse de tendance.
+
+## ⚠️ INSCRIPTION PACIFICA FINANCE (OBLIGATOIRE)
+
+Avant d'utiliser ce bot, vous devez créer un compte Pacifica Finance:
+
+1. **Visitez [https://app.pacifica.fi/](https://app.pacifica.fi/)**
+2. **Utilisez le code referral: `18SRTGXDJWCVSY75`** pour bénéficier de réductions sur les frais
+3. Connectez votre wallet Solana (Phantom, Solflare, etc.)
+4. Déposez de l'USDC pour commencer à trader
+
+> **💡 Important**: Le code referral `18SRTGXDJWCVSY75` vous permet d'obtenir des frais réduits, ce qui est crucial pour la rentabilité du market making.
 
 ---
 
 ## 📁 Localisation
 
 ```
-/home/aramahandry/Project/Pacifica_Market_Making/
+/home/onikai/Project/Pacifica_Market_Making/
 ```
 
 ---
@@ -88,7 +99,7 @@ EOF
 
 ```bash
 # Aller dans le répertoire du projet
-cd /home/aramahandry/Project/Pacifica_Market_Making
+cd /home/onikai/Project/Pacifica_Market_Making
 
 # Copier et configurer .env
 cp .env.example .env
@@ -143,7 +154,7 @@ docker-compose down
 ### Installation
 
 ```bash
-cd /home/aramahandry/Project/Pacifica_Market_Making
+cd /home/onikai/Project/Pacifica_Market_Making
 pip install -r requirements.txt
 ```
 
@@ -206,21 +217,21 @@ RELEASE_MODE = True                 # True=logs minimaux
 
 ---
 
-## 📊 DIFFÉRENCES PRINCIPALES vs ASTER
+## 📊 CARACTÉRISTIQUES TECHNIQUES
 
-| Aspect | ASTER (Original) | Pacifica (Adapté) |
-|--------|------------------|-------------------|
-| **Blockchain** | Ethereum | **Solana** |
-| **Clés API** | 3 clés (API_USER, API_SIGNER, API_PRIVATE_KEY) | **1 clé** (PRIVATE_KEY Solana) |
-| **Format symbole** | BTCUSDT, ETHUSDT | **BTC, ETH** |
-| **Ordres** | BUY, SELL | **bid, ask** |
-| **Authentification** | Web3, eth_account | **solders, base58** |
-| **URL API** | fapi.asterdex.com | **api.pacifica.fi** |
-| **WebSocket** | Binance-style | **Pacifica-style** |
+| Aspect | Détails |
+|--------|---------|
+| **Blockchain** | Solana (performance élevée, frais réduits) |
+| **Authentification** | 1 clé privée Solana (format base58) |
+| **Format symbole** | BTC, ETH, SOL (sans suffixe USDT) |
+| **Types d'ordres** | bid (achat), ask (vente) |
+| **API** | REST + WebSocket temps réel |
+| **URL API** | api.pacifica.fi/api/v1 |
+| **WebSocket** | wss://ws.pacifica.fi/ws |
 
 ---
 
-## 🎯 TOUTES LES FONCTIONNALITÉS CONSERVÉES
+## 🎯 FONCTIONNALITÉS COMPLÈTES
 
 ### ✅ Market Maker Complet
 - Mode ping-pong avec flip automatique
@@ -431,9 +442,6 @@ python websocket_orders.py --demo
 - **Phantom**: https://phantom.app/
 - **Solflare**: https://solflare.com/
 
-### Projet Original
-- **ASTER**: https://github.com/djienne/ASTER_Market_Making
-
 ---
 
 ## ✉️ SUPPORT
@@ -449,9 +457,9 @@ python websocket_orders.py --demo
 
 ## 🎉 FÉLICITATIONS!
 
-Vous disposez maintenant d'un bot de market making **COMPLET et FONCTIONNEL** pour Pacifica Finance, avec **TOUTES** les fonctionnalités du projet ASTER original:
+Vous disposez maintenant d'un bot de market making **COMPLET et FONCTIONNEL** pour Pacifica Finance:
 
-✅ 15 fichiers adaptés
+✅ 15 fichiers professionnels
 ✅ 9 scripts Python complets
 ✅ Docker ready (4 services)
 ✅ Documentation complète
@@ -462,16 +470,18 @@ Vous disposez maintenant d'un bot de market making **COMPLET et FONCTIONNEL** po
 
 ## 🚨 RAPPELS IMPORTANTS
 
-1. 🔑 **1 seule clé** Solana (pas 3 comme ASTER)
-2. 📝 **Format symbole**: BTC (pas BTCUSDT)
-3. 💰 **Commencez PETIT**: 5% du solde max
-4. 👀 **Surveillez** activement au début
-5. 🔐 **Sécurité** avant tout
-6. ⚠️ **Risques** à comprendre et accepter
+1. 🔗 **Code referral**: 18SRTGXDJWCVSY75 sur https://app.pacifica.fi/
+2. 🔑 **1 seule clé** Solana (format base58)
+3. 📝 **Format symbole**: BTC, ETH, SOL (sans USDT)
+4. 💰 **Commencez PETIT**: 5% du solde max
+5. 👀 **Surveillez** activement au début
+6. 🔐 **Sécurité** avant tout
+7. ⚠️ **Risques** à comprendre et accepter
 
 ---
 
 **Bonne chance avec votre market making!** 🚀
 
-*Projet adapté d'ASTER_Market_Making pour Pacifica Finance*
-*Date: 30 Septembre 2025*
+*Projet: Pacifica_Market_Making*
+*Auteur: Onikai*
+*Date: Octobre 2025*
