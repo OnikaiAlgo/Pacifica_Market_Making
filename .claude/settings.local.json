@@ -1,7 +1,15 @@
 {
   "permissions": {
     "allow": [
-      "Bash(docker-compose logs:*)"
+      "Bash(docker-compose logs:*)",
+      "Read(//Users/onikai/Projects/AlgoTrading/**)",
+      "Bash(awk:*)",
+      "Bash(docker-compose build:*)",
+      "Bash(docker-compose down:*)",
+      "Bash(docker-compose up:*)",
+      "Bash(for i in {1..10})",
+      "Bash(done)",
+      "Bash(docker-compose:*)"
     ],
     "deny": [],
     "ask": []

@@ -53,7 +53,7 @@ Avant d'utiliser ce bot, vous devez créer un compte Pacifica Finance:
 3. **data_collector.py** (631 lignes) - Collecteur de données en temps réel
 4. **calculate_avellaneda_parameters.py** - Calcul de spreads dynamiques
 5. **find_trend.py** - Analyse de tendance SuperTrend
-6. **terminal_dashboard.py** (1058 lignes) - Dashboard temps réel
+6. **dashboard.py** - Dashboard temps réel
 7. **get_my_trading_volume.py** - Analyse de volume de trading
 8. **websocket_orders.py** (542 lignes) - Gestionnaire WebSocket complet
 
@@ -198,7 +198,7 @@ python market_maker.py --symbol BTC
 
 ```bash
 # Dans un terminal séparé
-python terminal_dashboard.py
+python dashboard.py
 ```
 
 ---
@@ -410,7 +410,7 @@ docker-compose up -d
 python get_my_trading_volume.py --symbol BTC --days 7
 
 # Dashboard
-python terminal_dashboard.py --refresh-interval 15
+python dashboard.py
 
 # Test WebSocket
 python websocket_orders.py --demo

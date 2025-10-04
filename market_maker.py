@@ -19,10 +19,10 @@ DEFAULT_SELL_SPREAD = 0.006  # 0.6% above mid-price for sell orders (aligned wit
 USE_AVELLANEDA_SPREADS = True  # Toggle to pull spreads from Avellaneda parameter files (ENABLED with gamma cap at 3.0)
 DEFAULT_LEVERAGE = 1
 DEFAULT_BALANCE_FRACTION = 0.20  # Use fraction of available balance for each order (aligned with ASTER)
-POSITION_THRESHOLD_USD = 40.0  # USD threshold to switch to sell mode in case of partial order fill
+POSITION_THRESHOLD_USD = 15.0  # USD threshold to switch to sell mode in case of partial order fill
 
 # TIMING (in seconds)
-ORDER_REFRESH_INTERVAL = 20     # How long to wait before cancelling an unfilled order, in seconds.
+ORDER_REFRESH_INTERVAL = 30     # How long to wait before cancelling an unfilled order, in seconds.
 RETRY_ON_ERROR_INTERVAL = 30    # How long to wait after a major error before retrying.
 PRICE_REPORT_INTERVAL = 60      # How often to report current prices and spread to terminal.
 BALANCE_REPORT_INTERVAL = 60    # How often to report account balance to terminal.
@@ -40,7 +40,7 @@ CANCEL_SPECIFIC_ORDER = True # If True, cancel specific order ID. If False, canc
 
 # LOGGING
 LOG_FILE = 'market_maker.log'
-RELEASE_MODE = False  # When True, suppress all non-error logs and prints
+RELEASE_MODE = False  # When True, suppress all non-error logs and prints (VERBOSE MODE ENABLED for debugging)
 
 # Global variables for price data and rate limiting
 price_last_updated = None
@@ -852,34 +852,36 @@ async def market_making_loop(state, client, args):
                 continue
 
             # --- Double-check position before entering opening mode ---
-            if state.mode == opening_mode:
-                try:
-                    log.debug(f"Double-checking position before placing {opening_mode} order...")
-                    positions = await client.get_position_risk(args.symbol)
-
-                    if positions and 'positions' in positions:
-                        for position in positions['positions']:
-                            if position.get('symbol') == args.symbol:
-                                current_position_size = float(position.get('size', 0.0))
-                                entry_price = float(position.get('entry_price', 0.0))
-                                notional_value = abs(current_position_size * entry_price)
-
-                                position_is_long = current_position_size > 0
-                                position_is_short = current_position_size < 0
-
-                                # If in normal mode (opening bid) and we find a long position, switch to close.
-                                if not state.flip_mode and position_is_long and notional_value > POSITION_THRESHOLD_USD:
-                                    log.info(f"Found existing LONG position of size {current_position_size} with notional ${notional_value:.2f} - switching to {closing_mode} mode")
-                                    state.position_size = current_position_size
-                                    state.mode = closing_mode
-                                # If in flip mode (opening ask) and we find a short position, switch to close.
-                                elif state.flip_mode and position_is_short and notional_value > POSITION_THRESHOLD_USD:
-                                    log.info(f"Found existing SHORT position of size {current_position_size} with notional ${notional_value:.2f} - switching to {closing_mode} mode")
-                                    state.position_size = current_position_size
-                                    state.mode = closing_mode
-                                break
-                except Exception as e:
-                    log.warning(f"Failed to double-check position, proceeding with current mode: {e}")
+            # DISABLED: Relying on WebSocket updates to avoid Cloudflare 403 errors
+            # The UserDataUpdater handles position updates via WebSocket in real-time
+            # if state.mode == opening_mode:
+            #     try:
+            #         log.debug(f"Double-checking position before placing {opening_mode} order...")
+            #         positions = await client.get_position_risk(args.symbol)
+            #
+            #         if positions and 'positions' in positions:
+            #             for position in positions['positions']:
+            #                 if position.get('symbol') == args.symbol:
+            #                     current_position_size = float(position.get('size', 0.0))
+            #                     entry_price = float(position.get('entry_price', 0.0))
+            #                     notional_value = abs(current_position_size * entry_price)
+            #
+            #                     position_is_long = current_position_size > 0
+            #                     position_is_short = current_position_size < 0
+            #
+            #                     # If in normal mode (opening bid) and we find a long position, switch to close.
+            #                     if not state.flip_mode and position_is_long and notional_value > POSITION_THRESHOLD_USD:
+            #                         log.info(f"Found existing LONG position of size {current_position_size} with notional ${notional_value:.2f} - switching to {closing_mode} mode")
+            #                         state.position_size = current_position_size
+            #                         state.mode = closing_mode
+            #                     # If in flip mode (opening ask) and we find a short position, switch to close.
+            #                     elif state.flip_mode and position_is_short and notional_value > POSITION_THRESHOLD_USD:
+            #                         log.info(f"Found existing SHORT position of size {current_position_size} with notional ${notional_value:.2f} - switching to {closing_mode} mode")
+            #                         state.position_size = current_position_size
+            #                         state.mode = closing_mode
+            #                     break
+            #     except Exception as e:
+            #         log.warning(f"Failed to double-check position, proceeding with current mode: {e}")
 
             # --- Determine Strategy and Parameters ---
             buy_spread, sell_spread = get_spreads(state)
