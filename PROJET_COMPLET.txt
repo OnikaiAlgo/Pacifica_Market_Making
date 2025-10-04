@@ -319,9 +319,9 @@ RESSOURCES
 
 🌐 LIENS UTILES:
   - Pacifica:  https://app.pacifica.fi/
-  - Codes referral: ✅ 18SRTGXDJWCVSY75 (utilisé)
-                    D0CJ7BAYKFPDES42, 754C0W62E9ZS8M00,
-                    H0A3G2BES01RCKVX, 8Q6E0AC9KWY941A4, DRHGPPSWAXJ9Q2T6
+  - Referral:  https://app.pacifica.fi/?referral=754C0W62E9ZS8M00
+               (18 autres codes disponibles - voir README.md)
+  - Utilisés:  18SRTGXDJWCVSY75, D0CJ7BAYKFPDES42
   - Docs:      https://docs.pacifica.fi/
   - SDK:       https://github.com/pacifica-fi/python-sdk
   - Solana:    https://docs.solana.com/
@@ -381,11 +381,8 @@ Vous disposez d'un bot de market making COMPLET et FONCTIONNEL pour
 Pacifica Finance avec spreads dynamiques et analyse de tendance.
 
 ⚠️ N'OUBLIEZ PAS:
-  1. Créer un compte sur https://app.pacifica.fi/
-  2. Utiliser un code referral (frais réduits):
-     - ✅ 18SRTGXDJWCVSY75 (déjà utilisé)
-     - D0CJ7BAYKFPDES42, 754C0W62E9ZS8M00, H0A3G2BES01RCKVX
-     - 8Q6E0AC9KWY941A4, DRHGPPSWAXJ9Q2T6
+  1. Créer un compte via un lien referral (20 codes disponibles dans README.md)
+  2. Exemple: https://app.pacifica.fi/?referral=754C0W62E9ZS8M00
   3. Commencer avec de petits montants pour tester
 
 Bonne chance avec votre market making! 🚀
