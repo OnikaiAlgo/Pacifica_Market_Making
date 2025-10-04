@@ -165,7 +165,7 @@ sudo journalctl -u pacifica-bot -f
 ### Dashboard Terminal
 
 ```bash
-python3 terminal_dashboard.py
+python3 dashboard.py
 ```
 
 ### Logs

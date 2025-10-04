@@ -278,7 +278,7 @@ python calculate_avellaneda_parameters.py --symbol BTC --minutes 5  # Calculate 
 python find_trend.py --symbol BTC --interval 5m                     # Trend analysis with SuperTrend
 
 # Monitoring and utilities
-python terminal_dashboard.py                                        # Real-time account dashboard
+python dashboard.py                                                 # Real-time account dashboard
 python get_my_trading_volume.py --symbol BTC --days 7              # Get trading volume for BTC (last 7 days)
 python get_my_trading_volume.py --days 30                          # Get total volume across all symbols (last 30 days)
 python websocket_orders.py                                          # Monitor orders via WebSocket
@@ -292,20 +292,20 @@ python websocket_orders.py                                          # Monitor or
 | `data_collector.py` | Collects real-time order book and trade data | Run before starting market maker (needs 1+ hours of data) |
 | `calculate_avellaneda_parameters.py` | Calculates optimal spreads using Avellaneda-Stoikov model | Runs automatically in Docker, or manually for testing |
 | `find_trend.py` | Determines market trend using SuperTrend indicator | Runs automatically in Docker, or manually for analysis |
-| `terminal_dashboard.py` | Real-time overview of balances, positions, orders | Use for monitoring bot performance |
+| `dashboard.py` | Real-time overview of balances, positions, orders | Use for monitoring bot performance |
 | `get_my_trading_volume.py` | Calculates your trading volume and fees | Use for performance analysis |
 | `websocket_orders.py` | Real-time order updates via WebSocket | Use for debugging order flow |
 
-## Terminal Dashboard
+## Dashboard
 
-For a comprehensive, real-time overview of your account, use the `terminal_dashboard.py` script. It provides:
+For a comprehensive, real-time overview of your account, use the `dashboard.py` script. It provides:
 - Account balances (USDC and other assets)
 - Open positions with unrealized PnL
 - Recent order activity
 - Real-time market data
 
 ```bash
-python terminal_dashboard.py
+python dashboard.py
 ```
 
 This is extremely useful for monitoring the bot's performance without needing to check the exchange directly.
@@ -476,7 +476,7 @@ python market_maker.py --symbol BTC
 
 ```bash
 # In yet another terminal
-python terminal_dashboard.py
+python dashboard.py
 ```
 
 ### Using Screen or Tmux for Background Processes
@@ -712,7 +712,7 @@ If you encounter issues not covered here:
 
 3. **Test connection**:
    ```bash
-   python terminal_dashboard.py
+   python dashboard.py
    ```
 
 4. **Verify API status**: Check Pacifica's official channels for any service disruptions
