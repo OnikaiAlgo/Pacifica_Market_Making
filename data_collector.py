@@ -8,8 +8,9 @@ import argparse
 import requests
 from datetime import datetime
 from collections import deque
+from decimal import Decimal, ROUND_HALF_UP
 
-LIST_MARKETS = ['BTC', 'ETH', 'SOL', 'ASTER', 'USD1', 'BNB']
+LIST_MARKETS = ['BTC', 'ETH', 'UNI', 'BNB']
 
 class WebSocketDataCollector:
     def __init__(self, symbols, flush_interval=5, order_book_levels=10):
@@ -85,98 +86,24 @@ class WebSocketDataCollector:
 
     def get_initial_prices_api(self, symbol):
         """Get initial price data via API to establish baseline."""
-        endpoint = f"{self.api_info_base_url}/prices"
-        params = {'symbol': symbol}
-
-        try:
-            response = requests.get(endpoint, params=params, timeout=10)
-            response.raise_for_status()
-            data = response.json()
-
-            # Pacifica format: {"BTC": {"bid": "...", "ask": "...", "mid": "...", ...}}
-            if symbol in data:
-                symbol_data = data[symbol]
-                bid = float(symbol_data['bid'])
-                ask = float(symbol_data['ask'])
-                mid = (bid + ask) / 2
-                timestamp = time.time()
-
-                return {
-                    'timestamp': timestamp,
-                    'bid': bid,
-                    'ask': ask,
-                    'mid': mid
-                }
-        except Exception as e:
-            print(f"Error getting initial prices for {symbol}: {e}")
-            return None
+        # Skip API calls - Pacifica API requires authentication even for public endpoints
+        # WebSocket will provide initial data instead
+        print(f"  Skipping initial price API call (will use WebSocket data)")
+        return None
 
     def get_initial_orderbook_api(self, symbol):
         """Get initial order book data via API to establish baseline."""
-        endpoint = f"{self.api_base_url}/book"
-        params = {'symbol': symbol}
-
-        try:
-            response = requests.get(endpoint, params=params, timeout=10)
-            response.raise_for_status()
-            result = response.json()
-
-            if not result.get('success') or 'data' not in result:
-                return None
-
-            data = result['data']
-            timestamp = data.get('t', time.time() * 1000) / 1000  # Convert ms to seconds
-
-            # Pacifica format: {"s": symbol, "l": [[bids], [asks]], "t": timestamp}
-            levels = data.get('l', [[], []])
-            bids = [[float(bid['p']), float(bid['a'])] for bid in levels[0][:self.order_book_levels]]
-            asks = [[float(ask['p']), float(ask['a'])] for ask in levels[1][:self.order_book_levels]]
-
-            return {
-                'timestamp': timestamp,
-                'bids': bids,
-                'asks': asks,
-                'lastUpdateId': str(data.get('t', ''))
-            }
-        except Exception as e:
-            print(f"Error getting initial order book for {symbol}: {e}")
-            return None
+        # Skip API calls - Pacifica API requires authentication even for public endpoints
+        # WebSocket will provide initial data instead
+        print(f"  Skipping initial orderbook API call (will use WebSocket data)")
+        return None
 
     def get_initial_trades_api(self, symbol):
         """Get initial trade data via API to establish baseline."""
-        endpoint = f"{self.api_base_url}/trades"
-        params = {'symbol': symbol, 'limit': 100}
-
-        try:
-            response = requests.get(endpoint, params=params, timeout=10)
-            response.raise_for_status()
-            result = response.json()
-
-            if not result.get('success') or 'data' not in result:
-                return []
-
-            trades = result['data']
-            new_trades = []
-            # Pacifica trades format: {"success": true, "data": [{"price": "...", "amount": "...", "created_at": ..., "side": "..."}, ...]}
-            for trade in trades:
-                # Use combination of timestamp + price + amount as unique ID since Pacifica doesn't provide trade IDs
-                trade_id = f"{trade.get('created_at', '')}_{trade.get('price', '')}_{trade.get('amount', '')}"
-                if trade_id and trade_id not in self.seen_trade_ids[symbol]:
-                    trade_data = {
-                        'id': trade_id,
-                        'timestamp': trade.get('created_at', int(time.time() * 1000)),
-                        'side': trade.get('side', 'buy'),
-                        'price': float(trade.get('price', 0)),
-                        'quantity': float(trade.get('amount', 0))
-                    }
-                    new_trades.append(trade_data)
-                    self.seen_trade_ids[symbol].add(trade_id)
-
-            return new_trades
-
-        except Exception as e:
-            print(f"Error getting initial trades for {symbol}: {e}")
-            return []
+        # Skip API calls - Pacifica API requires authentication even for public endpoints
+        # WebSocket will provide initial data instead
+        print(f"  Skipping initial trades API call (will use WebSocket data)")
+        return []
 
     def on_combined_message(self, ws, message):
         """Handle combined stream messages from Pacifica WebSocket."""
@@ -219,20 +146,21 @@ class WebSocketDataCollector:
                     timestamp = price_data.get('timestamp', time.time() * 1000) / 1000
 
                     # Pacifica doesn't provide bid/ask in WebSocket, calculate from mid +/- spread
-                    mid = float(price_data.get('mid', 0))
-                    mark = float(price_data.get('mark', mid))
+                    # Use Decimal for precise calculations
+                    mid = Decimal(str(price_data.get('mid', 0)))
+                    mark = Decimal(str(price_data.get('mark', mid)))
 
                     # Estimate bid/ask from mid (small spread for storage)
-                    spread = abs(mid - mark) if mark else mid * 0.0001
+                    spread = abs(mid - mark) if mark else mid * Decimal('0.0001')
                     bid = mid - spread
                     ask = mid + spread
 
                     if mid > 0:
                         price_record = {
                             'timestamp': timestamp,
-                            'bid': bid,
-                            'ask': ask,
-                            'mid': mid
+                            'bid': float(bid),
+                            'ask': float(ask),
+                            'mid': float(mid)
                         }
 
                         with self.lock:
@@ -269,16 +197,16 @@ class WebSocketDataCollector:
                             'lastUpdateId': str(int(timestamp * 1000))
                         }
 
-                        # Also update price data from orderbook
-                        best_bid = processed_bids[0][0]
-                        best_ask = processed_asks[0][0]
-                        mid = (best_bid + best_ask) / 2
+                        # Also update price data from orderbook using Decimal for precision
+                        best_bid = Decimal(str(processed_bids[0][0]))
+                        best_ask = Decimal(str(processed_asks[0][0]))
+                        mid = (best_bid + best_ask) / Decimal('2')
 
                         price_record = {
                             'timestamp': timestamp,
-                            'bid': best_bid,
-                            'ask': best_ask,
-                            'mid': mid
+                            'bid': float(best_bid),
+                            'ask': float(best_ask),
+                            'mid': float(mid)
                         }
 
                         with self.lock:
