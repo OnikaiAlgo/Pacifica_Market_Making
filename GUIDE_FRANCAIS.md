@@ -8,16 +8,30 @@ Bot de market making complet pour Pacifica Finance DEX avec spreads dynamiques e
 
 Avant d'utiliser ce bot, vous devez créer un compte Pacifica Finance:
 
-1. **Visitez [https://app.pacifica.fi/](https://app.pacifica.fi/)**
-2. **Utilisez l'un de ces codes referral** pour bénéficier de réductions sur les frais:
-   - `18SRTGXDJWCVSY75` ✅ (déjà utilisé)
-   - `D0CJ7BAYKFPDES42`
-   - `754C0W62E9ZS8M00`
-   - `H0A3G2BES01RCKVX`
-   - `8Q6E0AC9KWY941A4`
-   - `DRHGPPSWAXJ9Q2T6`
-3. Connectez votre wallet Solana (Phantom, Solflare, etc.)
-4. Déposez de l'USDC pour commencer à trader
+1. **Cliquez sur l'un de ces liens referral** pour bénéficier de réductions sur les frais:
+   - [18SRTGXDJWCVSY75](https://app.pacifica.fi/?referral=18SRTGXDJWCVSY75) ✅ (utilisé)
+   - [D0CJ7BAYKFPDES42](https://app.pacifica.fi/?referral=D0CJ7BAYKFPDES42) ✅ (utilisé)
+   - [754C0W62E9ZS8M00](https://app.pacifica.fi/?referral=754C0W62E9ZS8M00)
+   - [H0A3G2BES01RCKVX](https://app.pacifica.fi/?referral=H0A3G2BES01RCKVX)
+   - [8Q6E0AC9KWY941A4](https://app.pacifica.fi/?referral=8Q6E0AC9KWY941A4)
+   - [DRHGPPSWAXJ9Q2T6](https://app.pacifica.fi/?referral=DRHGPPSWAXJ9Q2T6)
+   - [V2TY0CS2MSWD2TDS](https://app.pacifica.fi/?referral=V2TY0CS2MSWD2TDS)
+   - [WE8EJYGPEX6ANA11](https://app.pacifica.fi/?referral=WE8EJYGPEX6ANA11)
+   - [R8JFD38BCQY02E8B](https://app.pacifica.fi/?referral=R8JFD38BCQY02E8B)
+   - [B38X5Y77NAC2RND0](https://app.pacifica.fi/?referral=B38X5Y77NAC2RND0)
+   - [53MHB2DXMMJYMXDX](https://app.pacifica.fi/?referral=53MHB2DXMMJYMXDX)
+   - [EYATTJBTQ4964BTV](https://app.pacifica.fi/?referral=EYATTJBTQ4964BTV)
+   - [E1E7AVAG3V8VGQAB](https://app.pacifica.fi/?referral=E1E7AVAG3V8VGQAB)
+   - [F0JFV5QWMVZBPS0X](https://app.pacifica.fi/?referral=F0JFV5QWMVZBPS0X)
+   - [B8NCHSK7R2Y23MYC](https://app.pacifica.fi/?referral=B8NCHSK7R2Y23MYC)
+   - [C7GVNABMZ58R09Y1](https://app.pacifica.fi/?referral=C7GVNABMZ58R09Y1)
+   - [2R9ZBNFVGEA2GBMT](https://app.pacifica.fi/?referral=2R9ZBNFVGEA2GBMT)
+   - [VRYGGGHQEBV9NREG](https://app.pacifica.fi/?referral=VRYGGGHQEBV9NREG)
+   - [SJQR2H33Y3SBCEAV](https://app.pacifica.fi/?referral=SJQR2H33Y3SBCEAV)
+   - [315CET5419371Y8H](https://app.pacifica.fi/?referral=315CET5419371Y8H)
+
+2. Connectez votre wallet Solana (Phantom, Solflare, etc.)
+3. Déposez de l'USDC pour commencer à trader
 
 > **💡 Important**: L'utilisation d'un code referral vous permet d'obtenir des frais réduits, ce qui est crucial pour la rentabilité du market making.
 
@@ -476,10 +490,9 @@ Vous disposez maintenant d'un bot de market making **COMPLET et FONCTIONNEL** po
 
 ## 🚨 RAPPELS IMPORTANTS
 
-1. 🔗 **Codes referral disponibles** sur https://app.pacifica.fi/:
-   - ✅ `18SRTGXDJWCVSY75` (déjà utilisé)
-   - `D0CJ7BAYKFPDES42`, `754C0W62E9ZS8M00`, `H0A3G2BES01RCKVX`
-   - `8Q6E0AC9KWY941A4`, `DRHGPPSWAXJ9Q2T6`
+1. 🔗 **Liens referral** (cliquez pour inscription avec réduction):
+   - ✅ Codes utilisés: 18SRTGXDJWCVSY75, D0CJ7BAYKFPDES42
+   - 18 codes disponibles (voir section inscription en haut)
 2. 🔑 **1 seule clé** Solana (format base58)
 3. 📝 **Format symbole**: BTC, ETH, SOL (sans USDT)
 4. 💰 **Commencez PETIT**: 5% du solde max
