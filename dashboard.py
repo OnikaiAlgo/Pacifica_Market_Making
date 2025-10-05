@@ -24,7 +24,7 @@ logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s [%(levelname)s] %(message)s',
     handlers=[
-        logging.FileHandler('dashboard.log')
+        logging.FileHandler('dashboard.log', mode='w')
     ]
 )
 logger = logging.getLogger(__name__)
@@ -124,6 +124,8 @@ def get_initial_data():
             if data.get("success"):
                 positions = data.get("data", [])
                 logger.info(f"Loaded {len(positions)} positions")
+                if positions:
+                    logger.info(f"Raw position data from REST API: {positions}")
             else:
                 logger.warning(f"Positions API returned success=false: {data}")
     except Exception as e:
@@ -193,17 +195,34 @@ def render_dashboard(account_info, open_orders, positions, recent_events, mid_pr
             pos = positions[i]
             symbol = pos.get('symbol', 'N/A')
             side = pos.get('side', 'N/A')
-            size = float(pos.get('size', 0))
+            size = float(pos.get('amount', 0))
             entry_price = float(pos.get('entry_price', 0))
-            mark_price = float(pos.get('mark_price', 0))
+
+            # Use live mid-price for current price, fallback to stored mark_price
+            mark_price = mid_prices.get(symbol, float(pos.get('mark_price', 0)))
+
             unrealized_pnl = float(pos.get('unrealized_pnl', 0))
             margin = float(pos.get('margin', 0))
 
-            side_color = Colors.GREEN if side.lower() == 'long' else Colors.RED
+            # If there's only one position, and its margin is 0,
+            # use the total margin from account_info as a fallback.
+            if len(positions) == 1 and margin == 0:
+                margin = float(account_info.get('total_margin_used') or account_info.get('mu', 0))
+
+            # Recalculate PnL based on live price
+            if mark_price > 0 and size != 0:
+                if side.lower() in ('long', 'bid'):
+                    unrealized_pnl = (mark_price - entry_price) * size
+                else: # short or ask
+                    unrealized_pnl = (entry_price - mark_price) * size
+
+            # Map bid/ask to long/short for display
+            display_side = 'long' if side.lower() == 'bid' or side.lower() == 'long' else 'short'
+            side_color = Colors.GREEN if display_side == 'long' else Colors.RED
             pnl_color = Colors.GREEN if unrealized_pnl >= 0 else Colors.RED
             pnl_sign = '+' if unrealized_pnl >= 0 else ''
 
-            output.append(f"│ {symbol:<8}  {side_color}{side:<6}{Colors.RESET}    {size:>10.4f}   ${entry_price:>10.4f}   ${mark_price:>10.4f}   "
+            output.append(f"│ {symbol:<8}  {side_color}{display_side:<6}{Colors.RESET}    {size:>10.4f}   ${entry_price:>10.4f}   ${mark_price:>10.4f}   "
                   f"{pnl_color}{pnl_sign}${unrealized_pnl:>9.2f}{Colors.RESET}     ${margin:>9.2f}   │")
         else:
             # Empty row
@@ -405,28 +424,69 @@ async def listen_to_account_updates(recent_events, account_info, open_orders_dic
                                 logger.warning(f"account_orders data is not a list: {type(orders_data).__name__}")
 
                         elif channel == 'account_positions':
-                            pos_data = data.get('data', {})
-                            # Skip if data is not a dict
-                            if not isinstance(pos_data, dict):
-                                logger.warning(f"account_positions data is not a dict: {type(pos_data).__name__}")
-                                continue
+                            positions_data = data.get('data', [])
+                            # account_positions sends data as a list of positions
+                            if isinstance(positions_data, list):
+                                logger.debug(f"account_positions: received list with {len(positions_data)} positions")
 
-                            symbol = pos_data.get('symbol', 'N/A')
-                            side = pos_data.get('side', 'N/A')
-                            size = float(pos_data.get('size', 0))
+                                current_pos_keys = set()
 
-                            logger.info(f"POSITION UPDATE: symbol={symbol}, side={side}, size={size}")
+                                for pos_data in positions_data:
+                                    if not isinstance(pos_data, dict):
+                                        continue
 
-                            # Update positions dict
-                            pos_key = f"{symbol}_{side}"
-                            if size > 0:
-                                positions_dict[pos_key] = pos_data
-                            elif pos_key in positions_dict:
-                                del positions_dict[pos_key]
+                                    # Log the full position data to understand field names
+                                    logger.debug(f"Position data fields: {list(pos_data.keys())}")
+                                    logger.debug(f"Full position data: {pos_data}")
 
-                            timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
-                            event_msg = f"{Colors.MAGENTA}[{timestamp}] POSITION UPDATE: {symbol} {side} size={size}{Colors.RESET}"
-                            recent_events.append(event_msg)
+                                    # Map abbreviated field names to full names
+                                    symbol = pos_data.get('s', pos_data.get('symbol', 'N/A'))
+                                    side = pos_data.get('d', pos_data.get('side', 'N/A'))
+                                    size = float(pos_data.get('a', pos_data.get('size', 0)))
+                                    entry_price = float(pos_data.get('ep', pos_data.get('entry_price', 0)))
+                                    mark_price = float(pos_data.get('p', pos_data.get('mark_price', 0)))
+                                    unrealized_pnl = float(pos_data.get('pnl', pos_data.get('unrealized_pnl', 0)))
+                                    margin = float(pos_data.get('m', pos_data.get('margin', 0)))
+
+                                    pos_key = f"{symbol}_{side}"
+                                    current_pos_keys.add(pos_key)
+
+                                    # Create full position data for display consistency
+                                    full_pos_data = {
+                                        'symbol': symbol,
+                                        'side': side,
+                                        'size': size,
+                                        'entry_price': entry_price,
+                                        'mark_price': mark_price,
+                                        'unrealized_pnl': unrealized_pnl,
+                                        'margin': margin,
+                                    }
+
+                                    # Check for changes to generate event
+                                    if pos_key not in positions_dict or positions_dict[pos_key]['size'] != size:
+                                        timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                                        event_msg = f"{Colors.MAGENTA}[{timestamp}] POSITION UPDATE: {symbol} {side} size={size:.4f}{Colors.RESET}"
+                                        recent_events.append(event_msg)
+                                        logger.info(f"POSITION UPDATE: symbol={symbol}, side={side}, size={size}")
+
+                                    positions_dict[pos_key] = full_pos_data
+
+                                # Remove positions that are no longer in the list (i.e., closed)
+                                removed_pos_keys = set(positions_dict.keys()) - current_pos_keys
+                                for removed_key in removed_pos_keys:
+                                    removed_pos = positions_dict.get(removed_key, {})
+                                    symbol = removed_pos.get('symbol', 'N/A')
+                                    side = removed_pos.get('side', 'N/A')
+
+                                    timestamp = datetime.now().strftime('%H:%M:%S.%f')[:-3]
+                                    event_msg = f"{Colors.YELLOW}[{timestamp}] POSITION CLOSED: {symbol} {side}{Colors.RESET}"
+                                    recent_events.append(event_msg)
+                                    logger.info(f"POSITION CLOSED: key={removed_key}")
+
+                                    if removed_key in positions_dict:
+                                        del positions_dict[removed_key]
+                            else:
+                                logger.warning(f"account_positions data is not a list: {type(positions_data).__name__}")
 
                         elif channel == 'account_info':
                             info_data = data.get('data', {})
