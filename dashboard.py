@@ -29,9 +29,9 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Add pacifica_sdk to path
-sys.path.insert(0, str(Path(__file__).parent / "pacifica_sdk"))
-from common.constants import REST_URL, WS_URL
+# Make project packages importable when running this script directly
+sys.path.insert(0, str(Path(__file__).parent))
+from pacifica_sdk.common.constants import REST_URL, WS_URL
 
 # Load environment variables
 load_dotenv()
@@ -194,13 +194,27 @@ def render_dashboard(account_info, open_orders, positions, recent_events, mid_pr
         if i < len(positions):
             pos = positions[i]
             symbol = pos.get('symbol', 'N/A')
-            side = pos.get('side', 'N/A')
-            size = float(pos.get('amount', 0))
-            entry_price = float(pos.get('entry_price', 0))
+            raw_side = pos.get('side', 'N/A')
+            side = {'bid': 'buy', 'ask': 'sell'}.get(str(raw_side).lower(), raw_side)
+            side_lower = str(side).lower()
 
+            # Try multiple field names for size/amount
+            size_raw = pos.get('size') or pos.get('amount') or 0
+            try:
+                size = float(size_raw)
+            except (TypeError, ValueError):
+                size = 0.0
+
+            # Try multiple field names for entry_price
+            entry_price_raw = pos.get('entry_price') or pos.get('ep') or 0
+            try:
+                entry_price = float(entry_price_raw)
+            except (TypeError, ValueError):
+                entry_price = 0.0
+            
             # Use live mid-price for current price, fallback to stored mark_price
             mark_price = mid_prices.get(symbol, float(pos.get('mark_price', 0)))
-
+            
             unrealized_pnl = float(pos.get('unrealized_pnl', 0))
             margin = float(pos.get('margin', 0))
 
@@ -211,13 +225,13 @@ def render_dashboard(account_info, open_orders, positions, recent_events, mid_pr
 
             # Recalculate PnL based on live price
             if mark_price > 0 and size != 0:
-                if side.lower() in ('long', 'bid'):
+                if side_lower in ('long', 'buy'):
                     unrealized_pnl = (mark_price - entry_price) * size
                 else: # short or ask
                     unrealized_pnl = (entry_price - mark_price) * size
 
             # Map bid/ask to long/short for display
-            display_side = 'long' if side.lower() == 'bid' or side.lower() == 'long' else 'short'
+            display_side = 'long' if side_lower in ('long', 'buy') else 'short'
             side_color = Colors.GREEN if display_side == 'long' else Colors.RED
             pnl_color = Colors.GREEN if unrealized_pnl >= 0 else Colors.RED
             pnl_sign = '+' if unrealized_pnl >= 0 else ''
@@ -242,14 +256,15 @@ def render_dashboard(account_info, open_orders, positions, recent_events, mid_pr
             order = open_orders[i]
             order_id = str(order.get('order_id', 'N/A'))[:9]  # Truncate ID
             symbol = order.get('symbol', 'N/A')
-            side = order.get('side', 'N/A')
+            raw_side = order.get('side', 'N/A')
+            side = {'bid': 'buy', 'ask': 'sell'}.get(str(raw_side).lower(), raw_side)
             price = float(order.get('price', 0))
             initial_amount = float(order.get('initial_amount', 0))
             filled_amount = float(order.get('filled_amount', 0))
             order_type = order.get('order_type', 'N/A')
             created_at = format_timestamp(order.get('created_at'))
 
-            side_color = Colors.GREEN if side.lower() == 'bid' else Colors.RED
+            side_color = Colors.GREEN if str(side).lower() == 'buy' else Colors.RED
 
             # Calculate % difference from mid price
             mid_price = mid_prices.get(symbol)
@@ -271,10 +286,10 @@ def render_dashboard(account_info, open_orders, positions, recent_events, mid_pr
     output.append("")
 
     # Recent Events Section
-    output.append(f"{Colors.BOLD}{Colors.WHITE}┌─ RECENT EVENTS (last 5) ──────────────────────────────────────────────────────────────────────┐{Colors.RESET}")
+    output.append(f"{Colors.BOLD}{Colors.WHITE}┌─ RECENT EVENTS (last 10) ──────────────────────────────────────────────────────────────────────┐{Colors.RESET}")
 
-    # Always show exactly 5 event rows to prevent expanding render
-    events_to_show = list(recent_events)[-5:]
+    # Always show exactly 10 event rows to prevent expanding render
+    events_to_show = list(recent_events)[-10:]
     for event in events_to_show:
         # Strip ANSI color codes for length calculation
         event_plain = re.sub(r'\033\[[0-9;]+m', '', event) if event else ""
@@ -439,10 +454,18 @@ async def listen_to_account_updates(recent_events, account_info, open_orders_dic
                                     logger.debug(f"Position data fields: {list(pos_data.keys())}")
                                     logger.debug(f"Full position data: {pos_data}")
 
-                                    # Map abbreviated field names to full names
+                                    # Map abbreviated field names to full names with safe extraction
                                     symbol = pos_data.get('s', pos_data.get('symbol', 'N/A'))
                                     side = pos_data.get('d', pos_data.get('side', 'N/A'))
-                                    size = float(pos_data.get('a', pos_data.get('size', 0)))
+
+                                    # Try multiple field names for size/amount
+                                    size_raw = pos_data.get('a') or pos_data.get('size') or pos_data.get('amount') or 0
+                                    try:
+                                        size = float(size_raw)
+                                    except (TypeError, ValueError):
+                                        logger.warning(f"Invalid size value in position: {size_raw}")
+                                        size = 0.0
+
                                     entry_price = float(pos_data.get('ep', pos_data.get('entry_price', 0)))
                                     mark_price = float(pos_data.get('p', pos_data.get('mark_price', 0)))
                                     unrealized_pnl = float(pos_data.get('pnl', pos_data.get('unrealized_pnl', 0)))
@@ -532,10 +555,31 @@ async def listen_to_account_updates(recent_events, account_info, open_orders_dic
             await asyncio.sleep(5)  # Reconnect after 5 seconds
 
 
+async def periodic_account_refresh(account_info):
+    """Periodically refresh account info via REST API (every 10 seconds)"""
+    while True:
+        try:
+            await asyncio.sleep(10)  # Refresh every 10 seconds
+
+            api_url = f"{REST_URL}/account"
+            params = {"account": SOL_WALLET}
+            logger.debug(f"Periodic refresh: GET {api_url} params={params}")
+
+            response = requests.get(api_url, params=params, timeout=5)
+            if response.status_code == 200:
+                data = response.json()
+                if data.get("success"):
+                    new_account_info = data.get("data", {})
+                    account_info.update(new_account_info)
+                    logger.debug(f"Account info refreshed: balance={new_account_info.get('balance')}")
+        except Exception as e:
+            logger.error(f"Periodic account refresh failed: {e}")
+
+
 async def refresh_dashboard():
     """Main dashboard refresh loop"""
     # Pre-populate recent_events with 5 empty slots to prevent expanding render
-    recent_events = [""] * 5
+    recent_events = [""] * 10
     mid_prices = {}  # Dict to store current mid prices by symbol
 
     # Get initial data from REST API (only once at startup)
@@ -549,6 +593,9 @@ async def refresh_dashboard():
 
     # Start WebSocket listener in background
     asyncio.create_task(listen_to_account_updates(recent_events, account_info, open_orders_dict, positions_dict, mid_prices))
+
+    # Start periodic account info refresh task
+    asyncio.create_task(periodic_account_refresh(account_info))
 
     await asyncio.sleep(1)  # Give WebSocket time to connect
 
