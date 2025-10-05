@@ -95,3 +95,44 @@ services:
       - avellaneda-params
       - trend-finder
     restart: unless-stopped
+
+  liquidity-scanner:
+    build: .
+    container_name: pacifica_liquidity_scanner
+    environment:
+      - SCAN_INTERVAL_HOURS=1
+    env_file:
+      - .env
+    volumes:
+      - ./params:/app/params
+      - ./liquidity_scanner.py:/app/liquidity_scanner.py:ro
+      - ./.env:/app/.env:ro
+    command: >
+      sh -c "while true; do
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Running liquidity scan...\";
+        python liquidity_scanner.py --output /app/params/liquidity_scan_results.json --top 20;
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Scan complete. Next scan in $${SCAN_INTERVAL_HOURS} hour(s)...\";
+        sleep $${SCAN_INTERVAL_HOURS}h;
+      done"
+    restart: unless-stopped
+
+  advanced-scanner:
+    build: .
+    container_name: pacifica_advanced_scanner
+    environment:
+      - SCAN_INTERVAL_HOURS=24
+      - SCAN_DURATION_MINUTES=10
+    env_file:
+      - .env
+    volumes:
+      - ./params:/app/params
+      - ./advanced_liquidity_scanner.py:/app/advanced_liquidity_scanner.py:ro
+      - ./.env:/app/.env:ro
+    command: >
+      sh -c "while true; do
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Running advanced liquidity scan ($${SCAN_DURATION_MINUTES} min collection)...\";
+        python advanced_liquidity_scanner.py --duration $${SCAN_DURATION_MINUTES} --output /app/params/advanced_scan_results.json;
+        echo \"[$(date '+%Y-%m-%d %H:%M:%S')] Advanced scan complete. Next scan in $${SCAN_INTERVAL_HOURS} hour(s)...\";
+        sleep $${SCAN_INTERVAL_HOURS}h;
+      done"
+    restart: unless-stopped
