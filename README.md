@@ -19,7 +19,8 @@ Before using this bot, you need a Pacifica Finance account:
 1. **Click one of these referral links** for trading fee discounts:
    - [18SRTGXDJWCVSY75](https://app.pacifica.fi/?referral=18SRTGXDJWCVSY75) ✅ (used)
    - [D0CJ7BAYKFPDES42](https://app.pacifica.fi/?referral=D0CJ7BAYKFPDES42) ✅ (used)
-   - [754C0W62E9ZS8M00](https://app.pacifica.fi/?referral=754C0W62E9ZS8M00)
+   - [754C0W62E9ZS8M00](https://app.pacifica.fi/?referral=754C0W62E9ZS8M00) ✅ (used)
+   - [53MHB2DXMMJYMXDX](https://app.pacifica.fi/?referral=53MHB2DXMMJYMXDX) ✅ (used)
    - [H0A3G2BES01RCKVX](https://app.pacifica.fi/?referral=H0A3G2BES01RCKVX)
    - [8Q6E0AC9KWY941A4](https://app.pacifica.fi/?referral=8Q6E0AC9KWY941A4)
    - [DRHGPPSWAXJ9Q2T6](https://app.pacifica.fi/?referral=DRHGPPSWAXJ9Q2T6)
@@ -27,7 +28,6 @@ Before using this bot, you need a Pacifica Finance account:
    - [WE8EJYGPEX6ANA11](https://app.pacifica.fi/?referral=WE8EJYGPEX6ANA11)
    - [R8JFD38BCQY02E8B](https://app.pacifica.fi/?referral=R8JFD38BCQY02E8B)
    - [B38X5Y77NAC2RND0](https://app.pacifica.fi/?referral=B38X5Y77NAC2RND0)
-   - [53MHB2DXMMJYMXDX](https://app.pacifica.fi/?referral=53MHB2DXMMJYMXDX)
    - [EYATTJBTQ4964BTV](https://app.pacifica.fi/?referral=EYATTJBTQ4964BTV)
    - [E1E7AVAG3V8VGQAB](https://app.pacifica.fi/?referral=E1E7AVAG3V8VGQAB)
    - [F0JFV5QWMVZBPS0X](https://app.pacifica.fi/?referral=F0JFV5QWMVZBPS0X)
