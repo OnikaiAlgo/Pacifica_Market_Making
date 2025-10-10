@@ -11,7 +11,8 @@ Avant d'utiliser ce bot, vous devez créer un compte Pacifica Finance:
 1. **Cliquez sur l'un de ces liens referral** pour bénéficier de réductions sur les frais:
    - [18SRTGXDJWCVSY75](https://app.pacifica.fi/?referral=18SRTGXDJWCVSY75) ✅ (utilisé)
    - [D0CJ7BAYKFPDES42](https://app.pacifica.fi/?referral=D0CJ7BAYKFPDES42) ✅ (utilisé)
-   - [754C0W62E9ZS8M00](https://app.pacifica.fi/?referral=754C0W62E9ZS8M00)
+   - [754C0W62E9ZS8M00](https://app.pacifica.fi/?referral=754C0W62E9ZS8M00) ✅ (utilisé)
+   - [53MHB2DXMMJYMXDX](https://app.pacifica.fi/?referral=53MHB2DXMMJYMXDX) ✅ (utilisé)
    - [H0A3G2BES01RCKVX](https://app.pacifica.fi/?referral=H0A3G2BES01RCKVX)
    - [8Q6E0AC9KWY941A4](https://app.pacifica.fi/?referral=8Q6E0AC9KWY941A4)
    - [DRHGPPSWAXJ9Q2T6](https://app.pacifica.fi/?referral=DRHGPPSWAXJ9Q2T6)
@@ -19,7 +20,6 @@ Avant d'utiliser ce bot, vous devez créer un compte Pacifica Finance:
    - [WE8EJYGPEX6ANA11](https://app.pacifica.fi/?referral=WE8EJYGPEX6ANA11)
    - [R8JFD38BCQY02E8B](https://app.pacifica.fi/?referral=R8JFD38BCQY02E8B)
    - [B38X5Y77NAC2RND0](https://app.pacifica.fi/?referral=B38X5Y77NAC2RND0)
-   - [53MHB2DXMMJYMXDX](https://app.pacifica.fi/?referral=53MHB2DXMMJYMXDX)
    - [EYATTJBTQ4964BTV](https://app.pacifica.fi/?referral=EYATTJBTQ4964BTV)
    - [E1E7AVAG3V8VGQAB](https://app.pacifica.fi/?referral=E1E7AVAG3V8VGQAB)
    - [F0JFV5QWMVZBPS0X](https://app.pacifica.fi/?referral=F0JFV5QWMVZBPS0X)
@@ -491,8 +491,8 @@ Vous disposez maintenant d'un bot de market making **COMPLET et FONCTIONNEL** po
 ## 🚨 RAPPELS IMPORTANTS
 
 1. 🔗 **Liens referral** (cliquez pour inscription avec réduction):
-   - ✅ Codes utilisés: 18SRTGXDJWCVSY75, D0CJ7BAYKFPDES42
-   - 18 codes disponibles (voir section inscription en haut)
+   - ✅ Codes utilisés: 18SRTGXDJWCVSY75, D0CJ7BAYKFPDES42, 754C0W62E9ZS8M00, 53MHB2DXMMJYMXDX
+   - 16 codes disponibles (voir section inscription en haut)
 2. 🔑 **1 seule clé** Solana (format base58)
 3. 📝 **Format symbole**: BTC, ETH, SOL (sans USDT)
 4. 💰 **Commencez PETIT**: 5% du solde max
